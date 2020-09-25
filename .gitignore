@@ -1,0 +1,11 @@
+node_modules
+dist/src.f69400ca.js.map
+dist/src.f69400ca.css.map
+dist/index.html
+dist/src.f69400ca.js
+dist/src.f69400ca.css
+.cache
+.idea
+yarn-error.log
+package-lock.json
+.gitattributes
