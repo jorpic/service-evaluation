@@ -1,0 +1,10 @@
+.form {
+  &__block {
+    max-width: 500px;
+    width: 100%;
+    margin-bottom: 10px;
+    &-text {
+      margin-left: 10px;
+    }
+  }
+}
