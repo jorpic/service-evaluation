@@ -2,6 +2,7 @@ import {h} from 'preact'
 import {BtnItem} from '../BtnItem'
 import {Block} from '../Block'
 import {F, Data} from '../../types'
+import './index.scss'
 
 export const Form: F<any> = () => {
   const d: Data[] = [
