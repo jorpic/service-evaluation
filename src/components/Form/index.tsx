@@ -1,14 +1,24 @@
 import {h} from 'preact'
-import {InputItem} from '../InputItem'
+import {BtnItem} from '../BtnItem'
+import {Block} from '../Block'
+import {F, Data} from '../../types'
 
-export const Form = () => {
+export const Form: F<any> = () => {
+  const d: Data[] = [
+    {name:'as', text:'B12334khgfds', type:'checkbox'},
+    {name:'as', text:'Vlkjhgfds;lkjhgfds', type:'radio'},
+    {name:'as', text:'C;lkjhgfds', type:'checkbox'},
+    {name:'as', text:'C;lkjhgfds', type:'checkbox'},
+    {name:'as', text:'X;lkjhgfds', type:'radio'},
+    {name:'as', text:'Z;lkjhgfds', type:'radio'},
+  ]
   return (
-    <form class='form'>
-      <InputItem id='1' name='as' text='Привет' type='checkbox'/>
-      <InputItem id='2' name='as' text='Я' type='radio'/>
-      <InputItem id='3' name='as' text='Человек' type='checkbox'/>
-      <InputItem id='22' name='as' text='Я1' type='radio'/>
-      <InputItem id='21' name='as' text='Я2' type='radio'/>
+    <form class='form' onSubmit={e => e.preventDefault()}>
+      <Block data={d} text='23232'/>
+      <Block data={d} text='www'/>
+      <Block data={d} text='eee'/>
+      <Block data={d} text='qqqq'/>
+      <BtnItem name='submit' value='Отправить'/>
     </form>
   )
 }
