@@ -6,6 +6,7 @@ dist/src.f69400ca.js
 dist/src.f69400ca.css
 .cache
 .idea
+yarn.lock
 yarn-error.log
 package-lock.json
 .gitattributes

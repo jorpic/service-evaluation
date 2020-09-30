@@ -20,6 +20,6 @@ export const Fieldset: F<Props> = ({answers, question, type, onChange, typeProgr
     </legend>
     <div class="form__block-data">
       {answers.map(({text, name}, i) =>
-        <Question key={name + i + text} id={type + i + text} type={type} text={text} name={name} onChange={onChange} typeProgress={typeProgress}/>)}
+        <Question key={name + i + text} id={type + i + name} type={type} text={text} name={name} onChange={onChange} typeProgress={typeProgress}/>)}
     </div>
   </fieldset>
