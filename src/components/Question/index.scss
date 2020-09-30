@@ -5,7 +5,7 @@
   cursor: pointer;
   position: relative;
   padding: 0 10px 0 25px;
-  margin: 0 5px;
+  margin: 0 8px 5px;
   font-size: 14px;
   border-radius: 3px;
   transition: .15s;
@@ -16,7 +16,7 @@
     height: 16px;
     position: absolute;
     left: 5px;
-    bottom: 5px;
+    top: 4px;
     background-color: #aaa;
     box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
     transition: .2s;
@@ -32,7 +32,6 @@
   &:checked + .label {
     background-color: #ccc;
     &:before {
-      content: "\2713";
       text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
       box-shadow: inset 0px 2px 3px 0px rgba(88, 248, 110, 0.55), 0px 1px 0px 0px rgba(2, 55, 135, 0.8);
       background-color: #36928b;
@@ -42,11 +41,21 @@
 }
 
 .form {
-  input[type=checkbox] + .label:before {
-    border-radius: 3px;
+  input[type=checkbox] {
+    &:checked + .label:before {
+      content: '\2713';
+    }
+    & + .label:before {
+      border-radius: 3px;
+    }
   }
 
-  input[type=radio] + .label:before {
-    border-radius: 50%;
+  input[type=radio] {
+    &:checked + .label:before {
+      content: '13';
+    }
+    & + .label:before {
+      border-radius: 50%;
+    }
   }
 }

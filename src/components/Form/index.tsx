@@ -1,24 +1,20 @@
 import {h} from 'preact'
 import {BtnItem} from '../BtnItem'
-import {Block} from '../Block'
+import {Fieldset} from '../Fieldset'
 import {F, Data} from '../../types'
 import './index.scss'
 
-export const Form: F<any> = () => {
-  const d: Data[] = [
-    {name:'as', text:'B12334khgfds', type:'checkbox'},
-    {name:'as', text:'Vlkjhgfds;lkjhgfds', type:'radio'},
-    {name:'as', text:'C;lkjhgfds', type:'checkbox'},
-    {name:'as', text:'C;lkjhgfds', type:'checkbox'},
-    {name:'as', text:'X;lkjhgfds', type:'radio'},
-    {name:'as', text:'Z;lkjhgfds', type:'radio'},
-  ]
+type Props = {
+  questions: Data
+  onChange: (i: string) => void
+  typeProgress: Set<string>
+}
+
+export const Form: F<Props> = ({onChange, questions, typeProgress}) => {
   return (
     <form class='form' onSubmit={e => e.preventDefault()}>
-      <Block data={d} text='23232'/>
-      <Block data={d} text='www'/>
-      <Block data={d} text='eee'/>
-      <Block data={d} text='qqqq'/>
+      {questions && questions.map(r => <Fieldset answers={r.answers} question={r.question} type={r.type} onChange={onChange} typeProgress={typeProgress}/>)}
+
       <BtnItem name='submit' value='Отправить'/>
     </form>
   )
