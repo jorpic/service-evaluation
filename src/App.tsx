@@ -19,14 +19,12 @@ export const App = () => {
   return (
     <section class='app'>
       <div class='container'>
-        <div className="app__title">
+        <div class="app__title">
           <Title text='Опрос об удовлетворенности клиентов'/>
         </div>
-        <div className="app__form">
+        <div class="app__form">
           <Form onChange={toggleProgress} questions={questions} typeProgress={typeProgress}/>
-        </div>
-        <div className="app__progress">
-          {questions.length && <Progress progress={typeProgress.size} length={questions.length}/>}
+          <Progress progress={typeProgress.size} length={questions.length}/>
         </div>
       </div>
     </section>
