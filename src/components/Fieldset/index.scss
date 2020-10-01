@@ -1,13 +1,15 @@
 .form {
   &__block {
-    max-width: 500px;
-    width: 100%;
     margin-bottom: 10px;
-    &-text {
+    &-legend {
       margin-left: 10px;
+      margin-bottom: 10px;
     }
     &-data {
+      max-width: 500px;
+      width: 100%;
       flex-wrap: wrap;
     }
   }
 }
+
