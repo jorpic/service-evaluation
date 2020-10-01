@@ -1,4 +1,4 @@
-import {h, Fragment} from 'preact'
+import {h} from 'preact'
 import {F} from '../../types'
 import './index.scss'
 
@@ -9,10 +9,10 @@ type Props = {
 
 export const Progress: F<Props> = ({progress, length}) => {
   return (
-    <Fragment>
-      <div className="progress__length">{`${progress} / ${length}`}</div>
-      <progress class='progress' value={progress} max={length}/>
-    </Fragment>
+    <div class='progress'>
+      <div class="progress__length">{`${progress} / ${length}`}</div>
+      <progress class='progress__bar' value={progress} max={length}/>
+    </div>
   )
 
 }
