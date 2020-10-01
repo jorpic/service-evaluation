@@ -5,7 +5,7 @@
   cursor: pointer;
   position: relative;
   padding: 0 10px 0 25px;
-  margin: 0 8px 5px;
+  margin: 0 8px 15px;
   font-size: 14px;
   border-radius: 3px;
   transition: .15s;
@@ -45,6 +45,7 @@
     &:checked + .label:before {
       content: '\2713';
     }
+
     & + .label:before {
       border-radius: 3px;
     }
@@ -52,8 +53,10 @@
 
   input[type=radio] {
     &:checked + .label:before {
-      content: '13';
+      content: '\00B7';
+      font-size: 40px;
     }
+
     & + .label:before {
       border-radius: 50%;
     }
