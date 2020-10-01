@@ -6,7 +6,112 @@ import {useEffect, useState} from 'preact/hooks'
 import {Title} from './components/Title'
 
 export const App = () => {
-  const [questions, setQuestions] = useState<Data>([])
+  const [questions, setQuestions] = useState<Data>([
+    {
+      "question": "Насколько вы в целом довольны или недовольны нашей компанией?",
+      "type": "radio",
+      "answers": [
+        {
+          "text": "Очень доволен",
+          "name": "12"
+        },
+        {
+          "text": "Частично удовлетворен",
+          "name": "12"
+        },
+        {
+          "text": "Нет ни удовлетворения, ни неудовлетворенности",
+          "name": "12"
+        },
+        {
+          "text": "Несколько Неудовлетворенный",
+          "name": "12"
+        },
+        {
+          "text": "Очень недовольны",
+          "name": "12"
+        }
+      ]
+    },
+    {
+      "question": "Насколько вы в целом довольны или недовольны нашей компанией?",
+      "type": "radio",
+      "answers": [
+        {
+          "text": "Очень доволен",
+          "name": "87654"
+        },
+        {
+          "text": "Частично удовлетворен",
+          "name": "87654"
+        },
+        {
+          "text": "Нет ни удовлетворения, ни неудовлетворенности",
+          "name": "87654"
+        },
+        {
+          "text": "Несколько Неудовлетворенный",
+          "name": "87654"
+        },
+        {
+          "text": "Очень недовольны",
+          "name": "87654"
+        }
+      ]
+    },
+    {
+      "question": "Насколько вы в целом довольны или недовольны нашей компанией?",
+      "type": "radio",
+      "answers": [
+        {
+          "text": "Очень доволен",
+          "name": "656"
+        },
+        {
+          "text": "Нет ни удовлетворения, ни неудовлетворенности",
+          "name": "656"
+        },
+        {
+          "text": "Очень недовольны",
+          "name": "656"
+        },
+        {
+          "text": "Частично удовлетворен",
+          "name": "656"
+        },
+        {
+          "text": "Несколько Неудовлетворенный",
+          "name": "656"
+        }
+      ]
+    },
+    {
+      "question": "Насколько вы в целом довольны или недовольны нашей компанией?",
+      "type": "radio",
+      "answers": [
+        {
+          "text": "Очень доволен",
+          "name": "65"
+        },
+        {
+          "text": "Частично удовлетворен",
+          "name": "65"
+        },
+        {
+          "text": "Нет ни удовлетворения, ни неудовлетворенности",
+          "name": "65"
+        },
+        {
+          "text": "Несколько Неудовлетворенный",
+          "name": "65"
+        },
+        {
+          "text": "Очень недовольны",
+          "name": "65"
+        }
+      ]
+    }
+  ])
 
   const [typeProgress, setTypeProgress] = useState<Set<string>>(new Set())
   const toggleProgress = (key: string) => {
@@ -14,7 +119,6 @@ export const App = () => {
     setTypeProgress(new Set(typeProgress))
   }
 
-  useEffect(() => {fetch('/data.json').then(r => r.json()).then(r => setQuestions(r))}, [])
 
   return (
     <section class='app'>
@@ -24,9 +128,7 @@ export const App = () => {
         </div>
         <div className="app__form">
           <Form onChange={toggleProgress} questions={questions} typeProgress={typeProgress}/>
-        </div>
-        <div className="app__progress">
-          {questions.length && <Progress progress={typeProgress.size} length={questions.length}/>}
+          <Progress progress={typeProgress.size} length={questions.length}/>
         </div>
       </div>
     </section>
