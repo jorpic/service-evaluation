@@ -1,24 +1,30 @@
 import {h} from 'preact'
-import {F} from '../../types'
+import {Answer} from '../Answer'
+import {F, Answers} from '../../types'
 import './index.scss'
+import {useState} from "preact/hooks";
 
 type Props = {
-  id: string
+  answers: Answers
+  question: string
   type: string
-  name: string
-  text: string
   onChange: (i: string) => void
-  typeProgress: Set<string>
 }
 
-export const Question: F<Props> = ({id, type, name, text, onChange, typeProgress}) => {
-
-  const setI = (e: any) => {
-    e.target.checked && onChange(name)
-  }
-
-  return <span class='form__inner'>
-           <input class='input' id={id} type={type} name={name} onChange={setI}/>
-           <label class='label' for={id}>{text}</label>
-         </span>
+export const Question: F<Props> = ({answers, question, type, onChange}) => {
+  const [checkboxChecked, setCheckboxChecked] = useState(false)
+  return (
+    <fieldset class='form__block'>
+      <h4 class='form__block-text'>
+        {question}
+      </h4>
+      <div class='form__block-data'>
+        {answers.map(({text, name}) =>
+          <Answer type={type} text={text} name={name} onChange={onChange} setCheckboxChecked={setCheckboxChecked}/>)}
+        <div class='form__block-data__btn'>
+          {type === 'checkbox' && checkboxChecked && <button>Ok</button>}
+        </div>
+      </div>
+    </fieldset>
+  )
 }

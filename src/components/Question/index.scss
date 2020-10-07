@@ -1,64 +1,19 @@
-.label {
-  max-width: 230px;
-  width: 100%;
-  display: inline-block;
-  cursor: pointer;
-  position: relative;
-  padding: 0 10px 0 25px;
-  margin: 0 8px 15px;
-  font-size: 14px;
-  border-radius: 3px;
-  transition: .15s;
-
-  &:before {
-    content: "";
-    width: 16px;
-    height: 16px;
-    position: absolute;
-    left: 5px;
-    top: 4px;
-    background-color: #aaa;
-    box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, .3), 0px 1px 0px 0px rgba(255, 255, 255, .8);
-    transition: .2s;
-    text-align: center;
-    line-height: 18px;
-  }
-}
-
-.input {
-  position: absolute;
-  opacity: 0;
-
-  &:checked + .label {
-    background-color: #ccc;
-    &:before {
-      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-      box-shadow: inset 0px 2px 3px 0px rgba(88, 248, 110, 0.55), 0px 1px 0px 0px rgba(2, 55, 135, 0.8);
-      background-color: #36928b;
-      color: #f3f3f3;
-    }
-  }
-}
-
 .form {
-  input[type=checkbox] {
-    &:checked + .label:before {
-      content: '\2713';
+  &__block {
+    margin-bottom: 10px;
+    &-text {
+      text-align: left;
+      margin-left: 10px;
+      margin-bottom: 10px;
     }
-
-    & + .label:before {
-      border-radius: 3px;
-    }
-  }
-
-  input[type=radio] {
-    &:checked + .label:before {
-      content: '\00B7';
-      font-size: 40px;
-    }
-
-    & + .label:before {
-      border-radius: 50%;
+    &-data {
+      display: flex;
+      max-width: 500px;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      text-align: left;
     }
   }
 }
+
