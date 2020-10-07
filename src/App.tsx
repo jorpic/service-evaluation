@@ -3,7 +3,6 @@ import {Data} from './types'
 import {Form} from './components/Form'
 import {Progress} from './components/Progress'
 import {useEffect, useState} from 'preact/hooks'
-import {Title} from './components/Title'
 
 export const App = () => {
   const [questions, setQuestions] = useState<Data>([])
@@ -20,7 +19,6 @@ export const App = () => {
     <section class='app'>
       <div class='container'>
         <div class="app__title">
-          <Title text='Опрос об удовлетворенности клиентов'/>
         </div>
         <div class="app__form">
           <Form onChange={toggleProgress} questions={questions} typeProgress={typeProgress}/>
