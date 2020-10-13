@@ -2,18 +2,24 @@
   &__block {
     margin-bottom: 10px;
     &-text {
-      text-align: left;
-      margin-left: 10px;
-      margin-bottom: 10px;
+      text-align: center;
+      margin-bottom: 20px;
     }
-    &-data {
-      display: flex;
-      max-width: 500px;
-      width: 100%;
-      flex-wrap: wrap;
-      justify-content: flex-start;
-      text-align: left;
+    &-select {
+      .selected-rating {
+        &__selected-star {
+          padding: 25px 0;
+          margin: 30px 0;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+        }
+      }
     }
   }
 }
 
+.icon {
+  cursor: pointer;
+  margin: 30px 0;
+}
