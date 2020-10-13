@@ -1,5 +1,5 @@
 import {h, render} from 'preact'
-import {App} from './App'
 import './style.scss'
+import {App} from './App'
 
 render(<App/>, document.getElementById('root'))
