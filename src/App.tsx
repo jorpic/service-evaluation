@@ -2,22 +2,21 @@ import {h} from 'preact'
 import {useEffect, useState} from 'preact/hooks'
 import cn from 'classnames'
 import {Form} from './components/Form'
-import {Data} from './types'
 import success from './assets/success.svg'
 
 export const App = () => {
-  const [questions, setQuestions] = useState<Data>(null)
+  const [isLoading, setIsLoading] = useState(false)
   const [nextPage, setNextPage] = useState(false)
   const [isDone, setIsDone] = useState(false)
 
-  const [typeProgress, setTypeProgress] = useState<Set<string>>(new Set())
-  const toggleProgress = (key: string) => {
-    !typeProgress.has(key) && typeProgress.add(key)
-    setTypeProgress(new Set(typeProgress))
+  const [typeIconTitle, setTypeIconTitle] = useState<Set<string>>(new Set())
+  const toggleIconTitle = (key: string) => {
+    typeIconTitle.has(key) ? typeIconTitle.delete(key) : typeIconTitle.add(key)
+    setTypeIconTitle(new Set(typeIconTitle))
   }
 
   useEffect(() => {
-    fetch('/data.json').then(r => r.json()).then(r => setTimeout(()=>setQuestions(r), 1))
+     setTimeout(() => setIsLoading(!isLoading), 500)
   }, [])
 
   return (
@@ -32,7 +31,7 @@ export const App = () => {
             <h3>Пройдите небольшой опрос.</h3>
           </div>
           <div class='app__welcome-btn'>
-            <button class={cn('button is-primary', {'is-loading': !questions})}
+            <button class={cn('button is-primary', {'is-loading': !isLoading})}
                     onClick={() => setNextPage(!nextPage)}>Пройти опрос</button>
           </div>
         </div>
@@ -43,7 +42,7 @@ export const App = () => {
             <h1>Опрос об удовлетворенности клиентов</h1>
           </div>
           <div class='app__form'>
-            <Form onChange={toggleProgress} questions={questions} onDone={setIsDone} size={typeProgress.size}/>
+            <Form onClick={toggleIconTitle} onDone={setIsDone}/>
           </div>
         </div>
         }
