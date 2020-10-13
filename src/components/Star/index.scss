@@ -1,0 +1,55 @@
+.form__block-stars {
+  transform: rotateY(180deg);
+
+  &:not(:checked) {
+    & > input {
+      display: none;
+    }
+
+    & > label {
+      width: 42px;
+      padding: 0;
+      margin: 0 10px;
+      cursor: pointer;
+      font-size: 60px;
+      line-height: 60px;
+      color: #d7d7d7;
+      text-shadow: 1px 1px #bbb;
+
+      &:before {
+        content: '\2605';
+      }
+
+      &:hover, &:hover ~ label {
+        color: gold;
+      }
+    }
+  }
+
+  & > input:checked {
+    & ~ label {
+      color: gold;
+      text-shadow: 1px 1px #cc6600;
+    }
+  }
+
+  & > input:checked {
+    & + label:hover,
+    & + label:hover ~ label,
+    & ~ label:hover,
+    & ~ label:hover ~ label {
+      text-shadow: 1px 1px goldenrod;
+    }
+  }
+
+  & > label:hover ~ input:checked ~ label {
+    text-shadow: 1px 1px goldenrod;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .form__block-stars:not(:checked) > label {
+    font-size: 45px;
+    line-height: 45px;
+  }
+}
