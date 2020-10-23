@@ -1,0 +1,38 @@
+name:       service-evaluation
+version:    0.1.0.0
+github:     "Soul1/service-evaluation"
+# license:    MIT
+# author:     "Max Taldykin"
+# maintainer: "jorpic@gmail.com"
+# copyright:  "2020 Max Taldykin"
+
+extra-source-files:
+- README.md
+
+description:  Please see the README
+
+ghc-options:
+  - -Wall
+  - -Werror
+  - -O2
+  - -funbox-strict-fields
+
+default-extensions:
+  - LambdaCase
+  - OverloadedStrings
+  - QuasiQuotes
+  - RecordWildCards
+
+executables:
+  service-evaluation:
+    main: Main.hs
+    source-dirs: hs
+    dependencies:
+      - base >= 4.7 && < 5
+      - aeson
+      - configurator
+      - postgresql-simple
+      - qm-interpolated-string
+      - resource-pool
+      - scotty
+      - text
