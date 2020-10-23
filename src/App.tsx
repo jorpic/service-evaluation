@@ -5,7 +5,7 @@ import {Form} from './components/Form'
 import success from './assets/success.svg'
 
 export const App = () => {
-  const [isLoading, setIsLoading] = useState(false)
+  const [questions, setQuestions] = useState(null)
   const [nextPage, setNextPage] = useState(false)
   const [isDone, setIsDone] = useState(false)
 
@@ -16,7 +16,18 @@ export const App = () => {
   }
 
   useEffect(() => {
-     setTimeout(() => setIsLoading(!isLoading), 500)
+    const key = window.location.hash.replace('#', '')
+    fetch(`/api/${key}`)
+      .then(r => r.json())
+      .then(r => {
+        if(r.questions) {
+          setQuestions(r.questions)
+        } else {
+          console.warn('Unexpected result from API', r)
+          // FIXME: handle logic error
+        }
+      })
+      // .catch FIXME: handle network errors
   }, [])
 
   return (
@@ -31,7 +42,7 @@ export const App = () => {
             <h3>Пройдите небольшой опрос.</h3>
           </div>
           <div class='app__welcome-btn'>
-            <button class={cn('button is-primary', {'is-loading': !isLoading})}
+            <button class={cn('button is-primary', {'is-loading': !questions})}
                     onClick={() => setNextPage(!nextPage)}>Пройти опрос</button>
           </div>
         </div>
@@ -42,7 +53,7 @@ export const App = () => {
             <h1>Опрос об удовлетворенности клиентов</h1>
           </div>
           <div class='app__form'>
-            <Form onClick={toggleIconTitle} onDone={setIsDone}/>
+            <Form questions={questions} onClick={toggleIconTitle} onDone={setIsDone}/>
           </div>
         </div>
         }
