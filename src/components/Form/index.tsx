@@ -12,11 +12,13 @@ import './index.scss'
 type Props = {
   onClick: (i: string) => void
   onDone: (i: boolean) => void
+  questions: any[]
 }
 
-export const Form: F<Props> = ({onDone, onClick}) => {
+export const Form: F<Props> = ({questions, onDone, onClick}) => {
   const [isLoading, setIsLoading] = useState(false)
   const setDone = () => {
+    // FIXME: post answers
     setIsLoading(true)
     setTimeout(() => onDone(true), 2000)
   }
@@ -35,16 +37,16 @@ export const Form: F<Props> = ({onDone, onClick}) => {
       {icon: negative, title: 'Не понравилось'},
     ]
   }
-  const answers: { [star: string]: any } = {
-    good: ['Хороший текст', 'тексттексттексттекст', 'тексттексттекст?'],
-    normal: ['Что', 'За', 'Середина?'],
-    bad: ['Невнятная речь', 'Не решили проблему', 'Отказались помогать']
-  }
-  useEffect(() => {
-    star in answers ?
-      star in stars && setSelectedStar(stars[star](answers[star]))
-      : star in stars && setSelectedStar(stars[star](icons[star]))
-  }, [star])
+  const valToStar = (v) => ['', 'veryBad', 'bad', 'normal', 'good', 'veryGood'][v]
+  const answers: { [star: string]: any } = {}
+  questions.forEach(q =>
+    q.starMask.forEach(v =>
+      answers[valToStar(v)] = {
+        title: q.question,
+        answers: q.answers.map(a => a.text)
+      }))
+
+  useEffect(() => setSelectedStar(answers[star]), [star])
 
   return (
     <form class='form' onSubmit={e => e.preventDefault()}>
@@ -56,23 +58,4 @@ export const Form: F<Props> = ({onDone, onClick}) => {
       </div>
     </form>
   )
-}
-
-
-const stars: { [ratingStar: string]: any } = {
-  veryGood: (icons: any) => {
-    return {title: 'Что больше всего вам понравилось?', icons}
-  },
-  good: (answers: any) => {
-    return {title: 'Что вам понравилось?', answers}
-  },
-  normal: (answers: any) => {
-    return {title: 'Выбирите что было не так.', answers}
-  },
-  bad: (answers: any) => {
-    return {title: 'Что вас разачаровало?', answers}
-  },
-  veryBad: (icons: any) => {
-    return {title: 'Что больше всего вам не понравилось?', icons}
-  }
 }
