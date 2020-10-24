@@ -1,5 +1,5 @@
 import {h, render} from 'preact'
-import './style.scss'
-import {App} from './App'
+import 'bulma/css/bulma.css'
+import {App} from './components/App'
 
 render(<App/>, document.getElementById('root'))

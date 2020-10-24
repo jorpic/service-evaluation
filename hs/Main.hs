@@ -1,6 +1,7 @@
 
 module Main where
 
+import           Control.Monad (when)
 import           Control.Monad.IO.Class (liftIO)
 import qualified Data.Aeson as Aeson
 import qualified Data.Configurator as Config
@@ -50,9 +51,13 @@ server AppContext{..} = do
   get "/"
     $ file $ frontDir <> "index.html"
 
-  get "/:file"
-    $ param "file"
-    >>= file . (frontDir <>) . T.unpack . T.replace ".." "-" . T.pack
+  get "/:file" $ do
+    path <- param "file"
+    -- replace dots to prevent escaping from `frontDir`
+    let safePath = T.unpack $ T.replace ".." "-" path
+    when (".svg" `T.isSuffixOf` path)
+      $ setHeader "Content-Type" "image/svg+xml"
+    file $ frontDir <> safePath
 
   get "/api/:key" $ do
     key <- param "key"
@@ -64,15 +69,16 @@ server AppContext{..} = do
     -- FIXME: double check to prevent database DoS (sending huge json with
     -- invalid key)
     key <- param "key"
+    answers <- jsonData
     res <- liftIO $ withResource pgPool $ \c ->
       PG.query c [qn|
-        insert into "SatisfactionResponse" (response)
-          select ?
-            from "SatisfactionRequest" rq
-            where rq.id = ?
-              and rq.ctime > now() - interval '5 days'
-              and (select count(*) from "SatisfactionResponse" rs where rs.question_id = ?) < 10
-          returning (id)
-        |] [key :: Text]
+        insert into "SatisfactionResponse" (request_id, response)
+        \ select rq.id, ?::json
+        \   from "SatisfactionRequest" rq
+        \   where rq.id = ?
+        \     and rq.ctime > now() - interval '5 days'
+        \     and (select count(*) from "SatisfactionResponse" rs where rs.request_id = rq.id) < 10
+        \ returning (id)
+        |] (answers :: Aeson.Value, key :: Text)
     -- FIXME: return meaningful error message
     json (res :: [[Int]])

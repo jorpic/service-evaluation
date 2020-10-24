@@ -2,13 +2,26 @@ import {FunctionalComponent} from 'preact'
 
 export type F<T> = FunctionalComponent<T>
 
-export type Answers = {
+export type Answer = {
+  id: number
+  value: number
   text: string
-  name: string
-}[]
+}
 
-export type Data = {
-  question: string,
-  type: 'checkbox' | 'radio',
-  answers: Answers
-}[] | null
+export type QuestionType = 'checkbox' | 'radio'
+export type Question = {
+  id: number
+  type: QuestionType
+  starMask: number[]
+  text: string
+  answers: Answer[]
+}
+
+export type Result = {
+  [questionId: number]: {[answerId: number]: boolean}
+}
+
+export type SavedResult = {
+  value: number
+  answers: Result
+}
