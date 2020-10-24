@@ -2,8 +2,8 @@ begin;
 
 insert into "SatisfactionQuestion"
   (id, star_mask, type, question) values
-  (1, '{1,2,3,4,5}', 'radiobutton', 'Как вам наши огурцы?'),
-  (2, '{1,2,3}', 'radiobutton', 'Что не понравилось?')
+  (1, '{1,2,3,4,5}', 'checkbox', 'Как вам наши огурцы?'),
+  (2, '{1,2,3}', 'radio', 'Что не понравилось?')
   ;
 
 insert into "SatisfactionAnswer"

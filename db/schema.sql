@@ -7,14 +7,14 @@ drop table if exists "SatisfactionQuestion";
 drop type if exists "SatisfactionQuestionType";
 
 
-create type "SatisfactionQuestionType" as enum ('checkbox', 'radiobutton');
+create type "SatisfactionQuestionType" as enum ('checkbox', 'radio');
 
 create table "SatisfactionQuestion"
   ( id serial primary key
   , type "SatisfactionQuestionType" not null
   , star_mask int4[] not null default array[]::int4[]
   , question text not null
-  , ord int not null
+  -- , ord int not null
   );
 
 create table "SatisfactionAnswer"
@@ -24,7 +24,7 @@ create table "SatisfactionAnswer"
   , answer text not null
   , value int4 not null
   , free_form boolean not null default false
-  , ord int not null
+  -- , ord int not null
   );
 
 create table "SatisfactionRequest"
@@ -52,7 +52,7 @@ as $$
         json_build_object(
           'id', q.id,
           'type', q.type,
-          'question', q.question,
+          'text', q.question,
           'starMask', q.star_mask,
           'answers',
           json_agg(json_build_object(
@@ -70,7 +70,7 @@ $$ language sql volatile;
 create or replace function
   satisfaction_get_all_data(_key text) returns json
 as $$
-  with xxx(requestHasExpired, answers)  as (
+  with xxx(requestHasExpired, response)  as (
     select rq.ctime < now() - interval '5 days', rs.response
       from "SatisfactionRequest" rq
         left outer join "SatisfactionResponse" rs
@@ -84,7 +84,7 @@ as $$
           when exists(select 1 from xxx) then
             (select json_build_object(
               'questions', satisfaction_questions_as_json(),
-              'answers', answers,
+              'response', response,
               'requestHasExpired', requestHasExpired
             ) from xxx)
           else
