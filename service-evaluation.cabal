@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f55577313d5e87ddfdfb64c526f599ef19159c4a98c8b4eb1c506a520e9d5f9a
+-- hash: ec4883c0da3351b545afdfe14fb8e6899acdc0a8bf6596ec93c983c048bfe66f
 
 name:           service-evaluation
 version:        0.1.0.0
@@ -36,4 +36,5 @@ executable service-evaluation
     , resource-pool
     , scotty
     , text
+    , wai-cors
   default-language: Haskell2010

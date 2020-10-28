@@ -36,3 +36,4 @@ executables:
       - resource-pool
       - scotty
       - text
+      - wai-cors
