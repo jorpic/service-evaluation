@@ -13,6 +13,7 @@ import           Text.InterpolatedString.QM (qm, qn)
 
 import           Data.Pool (Pool, createPool, withResource)
 import qualified Database.PostgreSQL.Simple as PG
+import           Network.Wai.Middleware.Cors (simpleCors)
 import           Web.Scotty
 
 
@@ -48,6 +49,8 @@ main' configPath = do
 
 server :: AppContext -> ScottyM ()
 server AppContext{..} = do
+  middleware $ cors $ const $ Just simpleCorsResourcePolicy {
+                                                            }
   get "/"
     $ file $ frontDir <> "index.html"
 

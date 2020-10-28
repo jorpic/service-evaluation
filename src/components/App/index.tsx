@@ -5,6 +5,7 @@ import {Form} from '../Form'
 import * as Type from '../../types'
 import './index.scss'
 
+const API_BASE = 'http://188.166.72.121:1234'
 enum Page { Welcome, Stars, Done }
 
 export const App = () => {
@@ -13,9 +14,13 @@ export const App = () => {
   const [formData, setFormData] = useState(null)
 
   const key = window.location.hash.replace('#', '')
+  const apiUrl = `${API_BASE}/api/${key}`
+
   const loadFormData = () => {
-    fetch(`/api/${key}`)
-      .then(r => r.json())
+    fetch(apiUrl, {
+      method: 'GET',
+      mode: 'cors'
+    }).then(r => r.json())
       .then(r => {
         if(r.questions) {
           setFormData(r)
@@ -28,11 +33,9 @@ export const App = () => {
   }
 
   const saveResult = (result: Type.SavedResult) =>
-    fetch(`/api/${key}`, {
+    fetch(apiUrl, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      mode: 'cors',
       body: JSON.stringify(result)
     }).then(() => setCurrentPage(Page.Done))
 
