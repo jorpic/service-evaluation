@@ -6,6 +6,7 @@ export type Answer = {
   id: number
   value: number
   text: string
+  isFreeForm: boolean
 }
 
 export type QuestionType = 'checkbox' | 'radio'
