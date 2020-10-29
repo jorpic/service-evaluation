@@ -1,5 +1,5 @@
 import {h, Fragment} from 'preact'
-import {useEffect, useState} from 'preact/hooks'
+import {useState} from 'preact/hooks'
 import cn from 'classnames'
 import {Stars} from '../Stars'
 import {Question} from '../Question'
@@ -10,11 +10,12 @@ type Props = {
     questions: Type.Question[],
     response: Type.SavedResult
   }
-  onSave: (res: Type.SavedResult) => void
+  onSave: (res: Type.SavedResult) => Promise<void>
+  onErrorMessage: (message: string) => void
 }
 
-export const Form: Type.F<Props> = ({formData, onSave}) => {
-  const {questions, response} = formData;
+export const Form: Type.F<Props> = ({formData, onSave, onErrorMessage}) => {
+  const {questions, response} = formData
   const [isLoading, setIsLoading] = useState(false)
   const [starValue, setStarValue] = useState(response ? response.value : 0)
   const [answers, setAnswers] = useState(response ? response.answers : {})
@@ -33,19 +34,23 @@ export const Form: Type.F<Props> = ({formData, onSave}) => {
 
   const doSave = () => {
     setIsLoading(true)
+    onErrorMessage('')
     onSave({value: starValue, answers})
-    // FIXME: .catch(error)
+      .catch(() => {
+        onErrorMessage('У вас что-то с сетью, повторите позже!')
+       setTimeout(() => setIsLoading(false), 1500)
+      })
   }
 
   return (
     <Fragment>
       <div class='container has-text-centered'>
-        <h1 class='subtitle'>Опрос об удовлетворённости клиентов</h1>
-        <h2>Пожалуйста выберите оценку</h2>
+        <h1 class='title'>Опрос об удовлетворённости клиентов</h1>
+        <h2 class='subtitle'>Пожалуйста выберите оценку</h2>
         <Stars stars={5} value={starValue} onChanged={setStarValue}/>
       </div>
       <div class='columns is-mobile is-multiline is-centered'>
-        { questions
+        {questions
           .filter(q => q.starMask.includes(starValue))
           .map(q =>
             <Question
@@ -55,12 +60,17 @@ export const Form: Type.F<Props> = ({formData, onSave}) => {
         }
       </div>
       <div class='container has-text-centered'>
-        <button
-          class={cn('button is-primary', {'is-loading': isLoading})}
-          onClick={doSave}
-        >
-          Отправить
-        </button>
+        {isLoading
+          ? <button
+            class={cn('button is-primary', {'is-loading': isLoading})} disabled={true}>
+            Отправляется
+          </button>
+          : <button
+            class='button is-primary'
+            onClick={doSave}>
+            Отправить
+          </button>
+        }
       </div>
     </Fragment>
   )

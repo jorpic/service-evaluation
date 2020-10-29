@@ -7,3 +7,14 @@
   height: 100px;
   margin-bottom: 30px;
 }
+
+.hero {
+  position: relative;
+  height: 100vh;
+}
+
+.notification {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}

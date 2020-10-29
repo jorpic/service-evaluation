@@ -10,8 +10,10 @@ enum Page { Welcome, Stars, Done }
 
 export const App = () => {
   const [currentPage, setCurrentPage] = useState(Page.Welcome)
-  const [isDone, setIsDone] = useState(false)
+
   const [formData, setFormData] = useState(null)
+
+  const [errorMessage, setErrorMessage] = useState('')
 
   const key = window.location.hash.replace('#', '')
   const apiUrl = `${API_BASE}/api/${key}`
@@ -20,16 +22,10 @@ export const App = () => {
     fetch(apiUrl, {
       method: 'GET',
       mode: 'cors'
-    }).then(r => r.json())
-      .then(r => {
-        if(r.questions) {
-          setFormData(r)
-        } else {
-          console.warn('unexpected result from api', r)
-          // fixme: handle logic errors
-        }
-      })
-      // .catch fixme: handle network errors
+    })
+      .then(r => r.json())
+      .then(r => r.questions && setFormData(r))
+      .catch(() => {setErrorMessage('У нас что-то с сервером, повторите позже!')})
   }
 
   const saveResult = (result: Type.SavedResult) =>
@@ -39,27 +35,24 @@ export const App = () => {
       body: JSON.stringify(result)
     }).then(() => setCurrentPage(Page.Done))
 
-
   useEffect(loadFormData, [])
 
   const isFullHeight = currentPage === Page.Welcome || currentPage === Page.Done
   return (
-    <Centered isFullHeight={isFullHeight}>
+    <Centered isFullHeight={isFullHeight} errorMessage={errorMessage} onErrorMessage={setErrorMessage}>
       {currentPage === Page.Welcome &&
-        <div class='container has-text-centered'>
-          <h1 class='title'>Здравствуйте, оцените оказанную вам услугу</h1>
-          <h2 class='subtitle'>Пройдите небольшой опрос</h2>
-          <button
-            class={cls('button is-primary', {'is-loading': !formData})}
-            onClick={() => setCurrentPage(Page.Stars)}
-          >
-            Пройти опрос
-          </button>
-        </div>
+      <div class='container has-text-centered'>
+        <h1 class='title'>Здравствуйте, оцените оказанную вам услугу</h1>
+        <h2 class='subtitle'>Пройдите небольшой опрос</h2>
+        {formData
+          ? <button class='button is-primary' onClick={() => setCurrentPage(Page.Stars)}>Пройти опрос</button>
+          : <button class={cls('button is-primary', {'is-loading': !formData})} disabled={true}>Пройти опрос</button>
+        }
+      </div>
       }
 
       {currentPage === Page.Stars &&
-        <Form formData={formData} onSave={saveResult}/>
+      <Form formData={formData} onSave={saveResult} onErrorMessage={setErrorMessage}/>
       }
 
       {currentPage === Page.Done &&
@@ -72,11 +65,15 @@ export const App = () => {
   )
 }
 
-
-
-const Centered: Type.F<{isFullHeight: boolean}> = ({isFullHeight, children}) =>
+const Centered: Type.F<{ isFullHeight: boolean, errorMessage: string, onErrorMessage: (message: string) => void}> =
+  ({isFullHeight, errorMessage, onErrorMessage, children}) =>
   <section class={cls('hero', {'is-fullheight': isFullHeight})}>
     <div class='hero-body'>
       {children}
     </div>
+    {errorMessage &&
+    <div class='notification is-danger has-text-centered'>
+      <button class='delete' onClick={() => onErrorMessage('')}/>
+      {errorMessage}
+    </div>}
   </section>
