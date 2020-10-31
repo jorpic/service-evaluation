@@ -24,7 +24,7 @@ export const Form: Type.F<Props> = ({formData, onSave, onErrorMessage}) => {
     type: Type.QuestionType,
     questionId: number,
     answerId: number,
-    value: boolean
+    value: boolean | string
   ) {
     const answer = type === 'checkbox'
       ? Object.assign({}, answers[questionId], {[answerId]: value})
@@ -67,6 +67,8 @@ export const Form: Type.F<Props> = ({formData, onSave, onErrorMessage}) => {
           </button>
           : <button
             class='button is-primary'
+            disabled={!Object.keys(answers).length}
+            title={!Object.keys(answers).length && 'Пожалуйста выберите ответ!'}
             onClick={doSave}>
             Отправить
           </button>
