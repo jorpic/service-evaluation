@@ -1,6 +1,8 @@
 import {h} from 'preact'
 import {useState} from 'preact/hooks'
+import cn from 'classnames'
 import * as Type from '../../types'
+import './index.scss'
 
 type Props = {
   question: Type.Question
@@ -13,26 +15,39 @@ type Props = {
 }
 
 export const Question: Type.F<Props> = ({question: q, result, onChange}) => {
-  const [freeFormValue, setFreeFormValue] = useState(null)
+  const [freeFormValue, setFreeFormValue] = useState(result[q.id] || {})
+  const updateFF = (ansId, txt) => {
+    setFreeFormValue(Object.assign({}, freeFormValue, {[ansId]: txt})
+    onChange(q.type, q.id, ansId, txt)
+  }
+
+  const doChange = (ansId, isFreeForm, value) =>
+    onChange(
+      q.type, q.id, ansId,
+      isFreeForm && value ? freeFormValue[ansId] : value)
+
   return (
     <div class='column is-narrow mt-4 mr-6'>
       <h3 class='subtitle'>{q.text}</h3>
       {q.answers.map(a =>
-        <Field type={q.type} label={a.text} isFreeForm={a.isFreeForm}
-               freeFormValue={freeFormValue} onFreeFormValue={setFreeFormValue}>
+        <Field
+          type={q.type}
+          label={a.text}
+          isFreeForm={a.isFreeForm}
+          freeFormValue={freeFormValue[a.id] || ''}
+          onFreeFormValue={txt => updateFF(a.id, txt)}
+        >
           {q.type === 'checkbox'
             ? <input
               type='checkbox'
               checked={result[q.id] && !!result[q.id][a.id]}
-              onChange={e => onChange(
-                'checkbox', q.id, a.id,
-                (e.target as HTMLInputElement).checked)}/>
+              onChange={e => doChange(
+                a.id, a.isFreeForm, (e.target as HTMLInputElement).checked)}/>
             : <input
               type='radio'
               name={String(q.id)}
-              // FIXme исправь checked!
               checked={result[q.id] && !!result[q.id][a.id]}
-              onChange={() => onChange('radio', q.id, a.id, freeFormValue || true)}/>
+              onChange={() => doChange(a.id, a.isFreeForm, true)}/>
           }
         </Field>
       )}
@@ -52,11 +67,11 @@ const Field: Type.F<FieldProps> =
   ({type, label, isFreeForm, freeFormValue, onFreeFormValue, children}) =>
     <div class='field'>
       <div class='control'>
-        <label class={type} style={isFreeForm && 'display: flex; align-items: flex-start;'}>
+        <label class={cn(type,{'items-align-start': isFreeForm})}>
           {children}&nbsp;
           {isFreeForm
             ? <textarea class='textarea' style='min-height: 4em;'
-                        onChange={e => onFreeFormValue((e.target as HTMLInputElement).value)}
+                        onInput={e => onFreeFormValue((e.target as HTMLInputElement).value)}
                         value={freeFormValue}
                         placeholder={label}/>
             : label}
