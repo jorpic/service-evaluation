@@ -1,6 +1,8 @@
 import {h} from 'preact'
 import {useState} from 'preact/hooks'
+import cn from 'classnames'
 import * as Type from '../../types'
+import './index.scss'
 
 type Props = {
   question: Type.Question
@@ -65,7 +67,7 @@ const Field: Type.F<FieldProps> =
   ({type, label, isFreeForm, freeFormValue, onFreeFormValue, children}) =>
     <div class='field'>
       <div class='control'>
-        <label class={type} style={isFreeForm && 'display: flex; align-items: flex-start;'}>
+        <label class={cn(type,{'items-align-start': isFreeForm})}>
           {children}&nbsp;
           {isFreeForm
             ? <textarea class='textarea' style='min-height: 4em;'
