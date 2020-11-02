@@ -42,6 +42,9 @@ export const Form: Type.F<Props> = ({formData, onSave, onErrorMessage}) => {
       })
   }
 
+  const canSave = Object.values(answers)
+    .every(ans => Object.values(ans).some(res => !!res))
+
   return (
     <Fragment>
       <div class='container has-text-centered'>
@@ -67,8 +70,8 @@ export const Form: Type.F<Props> = ({formData, onSave, onErrorMessage}) => {
           </button>
           : <button
             class='button is-primary'
-            disabled={!Object.keys(answers).length}
-            title={!Object.keys(answers).length && 'Пожалуйста выберите ответ!'}
+            disabled={!canSave}
+            title={canSave || 'Пожалуйста выберите ответ!'}
             onClick={doSave}>
             Отправить
           </button>
