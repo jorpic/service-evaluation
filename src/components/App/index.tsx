@@ -15,6 +15,8 @@ export const App = () => {
 
   const [errorMessage, setErrorMessage] = useState('')
 
+  const [isLoadingSending, setIsLoadingSending] = useState(false)
+
   const key = window.location.hash.replace('#', '')
   const apiUrl = `${API_BASE}/api/${key}`
 
@@ -33,7 +35,12 @@ export const App = () => {
       method: 'POST',
       mode: 'cors',
       body: JSON.stringify(result)
-    }).then(() => setCurrentPage(Page.Done))
+    })
+      .then(() => setCurrentPage(Page.Done))
+      .catch(() => {
+        setErrorMessage('У вас что-то с сетью, повторите позже!')
+        setTimeout(() => setIsLoadingSending(false), 1500)
+      })
 
   useEffect(loadFormData, [])
 
@@ -51,7 +58,7 @@ export const App = () => {
       }
 
       {currentPage === Page.Stars &&
-      <Form formData={formData} onSave={saveResult} onErrorMessage={setErrorMessage}/>
+      <Form formData={formData} onSave={saveResult} onErrorMessage={setErrorMessage} isLoading={isLoadingSending} onIsLoading={setIsLoadingSending}/>
       }
 
       {currentPage === Page.Done &&

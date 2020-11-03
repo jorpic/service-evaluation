@@ -12,11 +12,12 @@ type Props = {
   }
   onSave: (res: Type.SavedResult) => Promise<void>
   onErrorMessage: (message: string) => void
+  onIsLoading: (i: boolean) => void
+  isLoading: boolean
 }
 
-export const Form: Type.F<Props> = ({formData, onSave, onErrorMessage}) => {
+export const Form: Type.F<Props> = ({formData, isLoading, onSave, onErrorMessage, onIsLoading}) => {
   const {questions, response} = formData
-  const [isLoading, setIsLoading] = useState(false)
   const [starValue, setStarValue] = useState(response ? response.value : 0)
   const [answers, setAnswers] = useState(response ? response.answers : {})
 
@@ -33,13 +34,9 @@ export const Form: Type.F<Props> = ({formData, onSave, onErrorMessage}) => {
   }
 
   const doSave = () => {
-    setIsLoading(true)
+    onIsLoading(true)
     onErrorMessage('')
     onSave({value: starValue, answers})
-      .catch(() => {
-        onErrorMessage('У вас что-то с сетью, повторите позже!')
-       setTimeout(() => setIsLoading(false), 1500)
-      })
   }
 
   const canSave = Object.values(answers)
