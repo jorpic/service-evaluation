@@ -49,8 +49,7 @@ main' configPath = do
 
 server :: AppContext -> ScottyM ()
 server AppContext{..} = do
-  middleware $ cors $ const $ Just simpleCorsResourcePolicy {
-                                                            }
+  middleware simpleCors
   get "/"
     $ file $ frontDir <> "index.html"
 

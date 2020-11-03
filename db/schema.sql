@@ -12,9 +12,9 @@ create type "SatisfactionQuestionType" as enum ('checkbox', 'radio');
 create table "SatisfactionQuestion"
   ( id serial primary key
   , type "SatisfactionQuestionType" not null
+  , tag_mask text[] not null default array[]::text[]
   , star_mask int4[] not null default array[]::int4[]
   , question text not null
-  -- , ord int not null
   );
 
 create table "SatisfactionAnswer"
@@ -22,9 +22,7 @@ create table "SatisfactionAnswer"
   , question_id int4 not null references "SatisfactionQuestion"
   , icon text
   , answer text not null
-  , value int4 not null
   , free_form boolean not null default false
-  -- , ord int not null
   );
 
 create table "SatisfactionRequest"
@@ -52,14 +50,14 @@ as $$
         json_build_object(
           'id', q.id,
           'type', q.type,
-          'text', q.question,
+          'tagMask', q.tag_mask,
           'starMask', q.star_mask,
+          'text', q.question,
           'answers',
           json_agg(json_build_object(
             'id', a.id,
-            'value', a.value,
             'text', a.answer,
-            'isFreeForm', a.free_form) order by a.value)
+            'isFreeForm', a.free_form))
         ) as  question
       from "SatisfactionQuestion" q, "SatisfactionAnswer" a
       where q.id = a.question_id
