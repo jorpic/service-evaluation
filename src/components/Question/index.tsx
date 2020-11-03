@@ -16,12 +16,12 @@ type Props = {
 
 export const Question: Type.F<Props> = ({question: q, result, onChange}) => {
   const [freeFormValue, setFreeFormValue] = useState(result[q.id] || {})
-  const updateFF = (ansId, txt) => {
-    setFreeFormValue(Object.assign({}, freeFormValue, {[ansId]: txt})
+  const updateFF = (ansId: number, txt: string) => {
+    setFreeFormValue(Object.assign({}, freeFormValue, {[ansId]: txt}))
     onChange(q.type, q.id, ansId, txt)
   }
 
-  const doChange = (ansId, isFreeForm, value) =>
+  const doChange = (ansId: number, isFreeForm: boolean, value: string | boolean) =>
     onChange(
       q.type, q.id, ansId,
       isFreeForm && value ? freeFormValue[ansId] : value)
@@ -35,8 +35,7 @@ export const Question: Type.F<Props> = ({question: q, result, onChange}) => {
           label={a.text}
           isFreeForm={a.isFreeForm}
           freeFormValue={freeFormValue[a.id] || ''}
-          onFreeFormValue={txt => updateFF(a.id, txt)}
-        >
+          onFreeFormValue={txt => updateFF(a.id, txt)}>
           {q.type === 'checkbox'
             ? <input
               type='checkbox'

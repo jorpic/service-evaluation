@@ -43,7 +43,7 @@ export const Form: Type.F<Props> = ({formData, onSave, onErrorMessage}) => {
   }
 
   const canSave = Object.values(answers)
-    .every(ans => Object.values(ans).some(res => !!res))
+    .every((ans: Type.Answer) => Object.values(ans).some(res => !!res))
 
   return (
     <Fragment>
