@@ -63,19 +63,13 @@ export const Form: Type.F<Props> = ({formData, onSave, onErrorMessage}) => {
         }
       </div>
       <div class='container has-text-centered'>
-        {isLoading
-          ? <button
-            class={cn('button is-primary', {'is-loading': isLoading})} disabled={true}>
-            Отправляется
-          </button>
-          : <button
-            class='button is-primary'
-            disabled={!canSave}
-            title={canSave || 'Пожалуйста выберите ответ!'}
-            onClick={doSave}>
-            Отправить
-          </button>
-        }
+        <button
+          class={cn('button is-primary', {'is-loading': isLoading})}
+          disabled={!canSave}
+          title={canSave || 'Пожалуйста выберите ответ!'}
+          onClick={doSave}>
+          {isLoading ? 'Отправляется' : 'Отправить'}
+        </button>
       </div>
     </Fragment>
   )

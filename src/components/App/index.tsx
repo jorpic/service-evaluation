@@ -44,10 +44,9 @@ export const App = () => {
       <div class='container has-text-centered'>
         <h1 class='title'>Здравствуйте, оцените оказанную вам услугу</h1>
         <h2 class='subtitle'>Пройдите небольшой опрос</h2>
-        {formData
-          ? <button class='button is-primary' onClick={() => setCurrentPage(Page.Stars)}>Пройти опрос</button>
-          : <button class={cls('button is-primary', {'is-loading': !formData})} disabled={true}>Пройти опрос</button>
-        }
+        <button class={cls('button is-primary', {'is-loading': !formData})} onClick={() => setCurrentPage(Page.Stars)} disabled={!formData}>
+          Пройти опрос
+        </button>
       </div>
       }
 
