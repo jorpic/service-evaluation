@@ -1,5 +1,6 @@
 import {h, Fragment} from 'preact'
 import {useState} from 'preact/hooks'
+import produce from 'immer'
 import cn from 'classnames'
 import {Stars} from '../Stars'
 import {Question} from '../Question'
@@ -16,66 +17,70 @@ type Props = {
   isLoading: boolean
 }
 
+const mainQuestions = [
+  {tag: 'op', text: 'Пожалуйста, выберите оценку операторам'},
+  {tag: 'tech', text: 'Пожалуйста, выберите оценку механику'},
+]
+
+const defaultResult = mainQuestions.reduce(
+  (r, {tag}) => Object.assign(r, {[tag]: {value: 0, answers: {}}}),
+  {}
+)
+
 export const Form: Type.F<Props> = ({formData, isLoading, onSave, onErrorMessage, onIsLoading}) => {
   const {questions, response} = formData
-  const [opValue, setOpValue] = useState(response?.op?.value || 0)
-  const [techValue, setTechValue] = useState(response?.tech?.value || 0)
-  const [answers, setAnswers] = useState(response ? response.answers : {})
+  const [result, setResult] = useState(response || defaultResult)
 
-  function updateAnswers(
-    type: Type.QuestionType,
-    questionId: number,
-    answerId: number,
-    value: boolean | string
-  ) {
-    const answer = type === 'checkbox'
-      ? Object.assign({}, answers[questionId], {[answerId]: value})
-      : {[answerId]: value}
-    setAnswers(Object.assign({}, answers, {[questionId]: answer}))
-  }
+  const updateValue = tag => val =>
+    setResult(produce(result, draft => { draft[tag].value = val }))
+
+  const updateAnswers = tag =>
+    ( type: Type.QuestionType,
+      questionId: number,
+      answerId: number,
+      value: boolean | string
+    ) =>
+      setResult(produce(result, draft => {
+        if (type === 'checkbox') {
+          draft[tag].answers[questionId] = draft[tag].answers[questionId] || {}
+          draft[tag].answers[questionId][answerId] = value
+        } else {
+          draft[tag].answers[questionId] = {[answerId]: value}
+        }
+      }))
 
   const doSave = () => {
     onIsLoading(true)
     onErrorMessage('')
-    onSave({
-      op: {value: opValue, answers},
-      tech: {value: techValue, answers}
-    })
+    onSave(result)
   }
 
-  const canSave = Object.values(answers)
-    .every((ans: Type.Answer) => Object.values(ans).some(res => !!res))
+  const canSave = true;
+    // FIXME: for each main question check value and answers
+
 
   return (
     <Fragment>
-      <div class='container has-text-centered'>
-        <h2 class='subtitle'>Пожалуйста, выберите оценку операторам</h2>
-        <Stars stars={5} value={opValue} onChanged={setOpValue}/>
-      </div>
-      <div class='columns is-mobile is-multiline is-centered'>
-        {questions
-          .filter(q => q.starMask.includes(opValue) && q.tagMask.includes('op'))
-          .map(q =>
-            <Question
-              question={q}
-              result={answers}
-              onChange={updateAnswers}/>)
-        }
-      </div>
-      <div class='container has-text-centered'>
-        <h2 class='subtitle'>Пожалуйста, выберите оценку механику</h2>
-        <Stars stars={5} value={techValue} onChanged={setTechValue}/>
-      </div>
-      <div class='columns is-mobile is-multiline is-centered'>
-        {questions
-          .filter(q => q.starMask.includes(techValue) && q.tagMask.includes('tech'))
-          .map(q =>
-            <Question
-              question={q}
-              result={answers}
-              onChange={updateAnswers}/>)
-        }
-      </div>
+      {mainQuestions.map(({tag, text}) =>
+        <Fragment>
+          <div class='container has-text-centered'>
+            <h2 class='subtitle'>{text}</h2>
+            <Stars stars={5}
+              value={result[tag].value}
+              onChanged={updateValue(tag)}/>
+          </div>
+          <div class='columns is-mobile is-multiline is-centered'>
+            {questions
+              .filter(q => q.starMask.includes(result[tag].value) && q.tagMask.includes(tag))
+              .map(q =>
+                <Question
+                  question={q}
+                  result={result[tag].answers}
+                  onChange={updateAnswers(tag)}/>)
+            }
+          </div>
+        </Fragment>
+      }
       <div class='container has-text-centered'>
         <button
           class={cn('button is-primary', {'is-loading': isLoading})}

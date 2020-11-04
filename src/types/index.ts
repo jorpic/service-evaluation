@@ -13,6 +13,7 @@ export type QuestionType = 'checkbox' | 'radio'
 export type Question = {
   id: number
   type: QuestionType
+  tagMask: string[]
   starMask: number[]
   text: string
   answers: Answer[]
@@ -23,6 +24,8 @@ export type Result = {
 }
 
 export type SavedResult = {
-  value: number
-  answers: Result
+  [tag: string]: {
+    value: number
+    answers: Result
+  }
 }
