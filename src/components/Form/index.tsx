@@ -18,7 +18,8 @@ type Props = {
 
 export const Form: Type.F<Props> = ({formData, isLoading, onSave, onErrorMessage, onIsLoading}) => {
   const {questions, response} = formData
-  const [starValue, setStarValue] = useState(response ? response.value : 0)
+  const [opValue, setOpValue] = useState(response?.op?.value || 0)
+  const [techValue, setTechValue] = useState(response?.tech?.value || 0)
   const [answers, setAnswers] = useState(response ? response.answers : {})
 
   function updateAnswers(
@@ -36,7 +37,10 @@ export const Form: Type.F<Props> = ({formData, isLoading, onSave, onErrorMessage
   const doSave = () => {
     onIsLoading(true)
     onErrorMessage('')
-    onSave({value: starValue, answers})
+    onSave({
+      op: {value: opValue, answers},
+      tech: {value: techValue, answers}
+    })
   }
 
   const canSave = Object.values(answers)
@@ -45,13 +49,26 @@ export const Form: Type.F<Props> = ({formData, isLoading, onSave, onErrorMessage
   return (
     <Fragment>
       <div class='container has-text-centered'>
-        <h1 class='title'>Опрос об удовлетворённости клиентов</h1>
-        <h2 class='subtitle'>Пожалуйста выберите оценку</h2>
-        <Stars stars={5} value={starValue} onChanged={setStarValue}/>
+        <h2 class='subtitle'>Пожалуйста, выберите оценку операторам</h2>
+        <Stars stars={5} value={opValue} onChanged={setOpValue}/>
       </div>
       <div class='columns is-mobile is-multiline is-centered'>
         {questions
-          .filter(q => q.starMask.includes(starValue))
+          .filter(q => q.starMask.includes(opValue) && q.tagMask.includes('op'))
+          .map(q =>
+            <Question
+              question={q}
+              result={answers}
+              onChange={updateAnswers}/>)
+        }
+      </div>
+      <div class='container has-text-centered'>
+        <h2 class='subtitle'>Пожалуйста, выберите оценку механику</h2>
+        <Stars stars={5} value={techValue} onChanged={setTechValue}/>
+      </div>
+      <div class='columns is-mobile is-multiline is-centered'>
+        {questions
+          .filter(q => q.starMask.includes(techValue) && q.tagMask.includes('tech'))
           .map(q =>
             <Question
               question={q}

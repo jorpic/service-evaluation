@@ -5,7 +5,7 @@ import {Form} from '../Form'
 import * as Type from '../../types'
 import './index.scss'
 
-const API_BASE = 'http://188.166.72.121:1234'
+const API_BASE = 'http://localhost:1234'
 enum Page { Welcome, Stars, Done }
 
 export const App = () => {
