@@ -58,7 +58,7 @@ export const App = () => {
       }
 
       {currentPage === Page.Stars &&
-      <Form formData={formData} onSave={saveResult} onErrorMessage={setErrorMessage} isLoading={isLoadingSending} onIsLoading={setIsLoadingSending}/>
+      <Form formData={formData} onSavedResult={saveResult} onErrorMessage={setErrorMessage} isLoading={isLoadingSending} onIsLoading={setIsLoadingSending}/>
       }
 
       {currentPage === Page.Done &&

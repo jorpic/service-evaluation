@@ -11,7 +11,7 @@ type Props = {
     questions: Type.Question[],
     response: Type.SavedResult
   }
-  onSave: (res: Type.SavedResult) => Promise<void>
+  onSavedResult: (res: Type.SavedResult) => Promise<void>
   onErrorMessage: (message: string) => void
   onIsLoading: (i: boolean) => void
   isLoading: boolean
@@ -23,22 +23,23 @@ const mainQuestions = [
 ]
 
 const defaultResult = mainQuestions.reduce(
-  (r, {tag}) => Object.assign(r, {[tag]: {value: 0, answers: {}}}),
-  {}
+  (r, {tag}) => Object.assign(r, {[tag]: {value: 0, answers: {}}}), {}
 )
 
-export const Form: Type.F<Props> = ({formData, isLoading, onSave, onErrorMessage, onIsLoading}) => {
+export const Form: Type.F<Props> = ({formData, isLoading, onSavedResult, onErrorMessage, onIsLoading}) => {
   const {questions, response} = formData
   const [result, setResult] = useState(response || defaultResult)
 
-  const updateValue = tag => val =>
-    setResult(produce(result, draft => { draft[tag].value = val }))
+  const updateValue = (tag: string) => (val: number) =>
+    setResult(produce(result, draft => {
+      draft[tag].value = val
+    }))
 
-  const updateAnswers = tag =>
-    ( type: Type.QuestionType,
-      questionId: number,
-      answerId: number,
-      value: boolean | string
+  const updateAnswers = (tag: string) =>
+    (type: Type.QuestionType,
+     questionId: number,
+     answerId: number,
+     value: boolean | string
     ) =>
       setResult(produce(result, draft => {
         if (type === 'checkbox') {
@@ -49,13 +50,13 @@ export const Form: Type.F<Props> = ({formData, isLoading, onSave, onErrorMessage
         }
       }))
 
-  const doSave = () => {
+  const doSavedResult = () => {
     onIsLoading(true)
     onErrorMessage('')
-    onSave(result)
+    onSavedResult(result)
   }
 
-  const canSave = true;
+  const canSavedResult = true;
     // FIXME: for each main question check value and answers
 
 
@@ -66,10 +67,10 @@ export const Form: Type.F<Props> = ({formData, isLoading, onSave, onErrorMessage
           <div class='container has-text-centered'>
             <h2 class='subtitle'>{text}</h2>
             <Stars stars={5}
-              value={result[tag].value}
-              onChanged={updateValue(tag)}/>
+                   value={result[tag].value}
+                   onChanged={updateValue(tag)}/>
           </div>
-          <div class='columns is-mobile is-multiline is-centered'>
+          <div class='columns is-mobile is-multiline is-centered mb-4'>
             {questions
               .filter(q => q.starMask.includes(result[tag].value) && q.tagMask.includes(tag))
               .map(q =>
@@ -79,14 +80,14 @@ export const Form: Type.F<Props> = ({formData, isLoading, onSave, onErrorMessage
                   onChange={updateAnswers(tag)}/>)
             }
           </div>
-        </Fragment>
+        </Fragment>)
       }
-      <div class='container has-text-centered'>
+      <div class='container has-text-centered mt-6'>
         <button
           class={cn('button is-primary', {'is-loading': isLoading})}
-          disabled={!canSave}
-          title={canSave || 'Пожалуйста выберите ответ!'}
-          onClick={doSave}>
+          disabled={!canSavedResult}
+          title={canSavedResult && 'Пожалуйста выберите ответ!'}
+          onClick={doSavedResult}>
           {isLoading ? 'Отправляется' : 'Отправить'}
         </button>
       </div>
