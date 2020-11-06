@@ -79,10 +79,9 @@ const Centered: Type.F<{ isFullHeight: boolean, errorMessage: string, onErrorMes
 
 const Welcome: Type.F<{ isLoading: boolean, onCurrentPage: (i: any) => void }> = ({isLoading, onCurrentPage}) =>
   <div class='container has-text-centered'>
-    <h1 class='title'>Здравствуйте, оцените оказанную вам услугу</h1>
-    <h2 class='subtitle'>Пройдите небольшой опрос</h2>
+    <h2 class='subtitle'>Уважаемый клиент, мы благодарим Вас за то, что воспользовались услугами нашей компании. Ваше мнение очень важно для нас.</h2>
     <button class={cls('button is-primary', {'is-loading': isLoading})} onClick={() => onCurrentPage(Page.Stars)} disabled={isLoading}>
-      Пройти опрос
+      Оцените услугу
     </button>
   </div>
 
