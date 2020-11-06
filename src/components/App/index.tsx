@@ -27,7 +27,9 @@ export const App = () => {
     })
       .then(r => r.json())
       .then(r => r.questions && setFormData(r))
-      .catch(() => {setErrorMessage('У нас что-то с сервером, повторите позже!')})
+      .catch(() => {
+        setErrorMessage('Ошибка загрузки данных с сервера, повторите попытку позже!')
+      })
   }
 
   const saveResult = (result: Type.SavedResult) =>
@@ -38,7 +40,7 @@ export const App = () => {
     })
       .then(() => setCurrentPage(Page.Done))
       .catch(() => {
-        setErrorMessage('У вас что-то с сетью, повторите позже!')
+        setErrorMessage('Отправка невозможна, проверьте ваше соединение с интернетом или повторите попытку позже!')
         setTimeout(() => setIsLoadingSending(false), 1500)
       })
 
@@ -48,13 +50,7 @@ export const App = () => {
   return (
     <Centered isFullHeight={isFullHeight} errorMessage={errorMessage} onErrorMessage={setErrorMessage}>
       {currentPage === Page.Welcome &&
-      <div class='container has-text-centered'>
-        <h1 class='title'>Здравствуйте, оцените оказанную вам услугу</h1>
-        <h2 class='subtitle'>Пройдите небольшой опрос</h2>
-        <button class={cls('button is-primary', {'is-loading': !formData})} onClick={() => setCurrentPage(Page.Stars)} disabled={!formData}>
-          Пройти опрос
-        </button>
-      </div>
+      <Welcome isLoading={!formData} onCurrentPage={setCurrentPage}/>
       }
 
       {currentPage === Page.Stars &&
@@ -62,10 +58,7 @@ export const App = () => {
       }
 
       {currentPage === Page.Done &&
-        <div class='container has-text-centered'>
-          <div class='done-img'/>
-          <h1 class='title'>Спасибо за ваши ответы!</h1>
-        </div>
+        <Done/>
       }
     </Centered>
   )
@@ -83,3 +76,18 @@ const Centered: Type.F<{ isFullHeight: boolean, errorMessage: string, onErrorMes
       {errorMessage}
     </div>}
   </section>
+
+const Welcome: Type.F<{ isLoading: boolean, onCurrentPage: (i: any) => void }> = ({isLoading, onCurrentPage}) =>
+  <div class='container has-text-centered'>
+    <h1 class='title'>Здравствуйте, оцените оказанную вам услугу</h1>
+    <h2 class='subtitle'>Пройдите небольшой опрос</h2>
+    <button class={cls('button is-primary', {'is-loading': isLoading})} onClick={() => onCurrentPage(Page.Stars)} disabled={isLoading}>
+      Пройти опрос
+    </button>
+  </div>
+
+const Done = () =>
+  <div class='container has-text-centered'>
+    <div class='done-img'/>
+    <h1 class='title'>Спасибо за ваши ответы!</h1>
+  </div>
